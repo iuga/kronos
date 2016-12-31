@@ -4,6 +4,12 @@
 Kronos is a simple and high-level library, written in Python, that provides utilities and helpers to make the first steps working in image recognition as simple and faster as we can.
 
 ## Getting started: 30 seconds to Kronos
+### Installation
+You can install Kronos directly from GitHub:
+```
+pip install git+https://github.com/iuga/kronos
+```
+
 ### Image Preprocessing
 
 `Images` provides a simple chaining API to load and preprocess your input images in a simple and really fast way. For example:
