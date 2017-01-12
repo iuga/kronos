@@ -29,9 +29,14 @@ image_data = Images().load(
 ).pad_to_square().resize(
     299, 299
 ).to_array(
-    normalized=True, mean_normalized=([123.68, 116.779, 103.939])
+    normalized='zero_one', mean_normalized=([123.68, 116.779, 103.939])
 )
 ```
+
+#### Normalization methods:
+These are the provided normalization methods:
+- Zero to One `zero_one`: All values are normalized between [0, 1]
+- Minus one to Plus one `minus_plus_one`: All values are normalized between [-1, 1]
 
 ### Batch Generators
 `Generators` provide a unique method to create and process mini-batches from your dataset. For example:
@@ -86,7 +91,7 @@ def encode_image(X, y):
     # X = image url like "./dog.001.jpg"
     # y = class like "dog" or "1"
     # Return a 224x224 normalized squared image and its class
-    return Images().load(X).resize(224, 224).to_array(normalized=True), y
+    return Images().load(X).resize(224, 224).to_array(normalized='zero_one'), y
 
 #...
 

@@ -11,6 +11,13 @@ class Images(object):
         'bicubic': Image.BICUBIC
     }
 
+    NORMALIZATION_ZERO_ONE = 'zero_one'
+    NORMALIZATION_MINUS_PLUS_ONE = 'minus_plus_one'
+
+    NORMALIZATION_METHODS = [
+        NORMALIZATION_ZERO_ONE, NORMALIZATION_MINUS_PLUS_ONE
+    ]
+
     def load(self, filename):
         """
         Load an image into PIL format
@@ -33,19 +40,25 @@ class Images(object):
         print("Size: {}".format(self.img.size))
         return self
 
-    def to_array(self, normalized=False, mean_normalized=False):
+    def to_array(self, normalization=False, mean_normalized=False):
         """
         Return a NumpyArray with (height, width, channel) format.
 
-        Mean normalized perform a channel normalization. E.g: (123.68, 116.779, 103.939).
+        normalization: If False/None/Empty no normalization will be applied. Otherwise, the method should be passed.
+            normalization methods:
+            - zero_one: All the values will be normalized between [0, 1]
+            - minus_plus_one: All the values will be normalized between [-1, 1]
 
-        If normalized all the pixel values will be between 0 and 1
+        mean_normalized: Mean normalized perform a channel normalization. E.g: (123.68, 116.779, 103.939).
         """
+        # Validate the normalization method
+        if normalization and normalization not in self.NORMALIZATION_METHODS:
+            raise ValueError("Invalid Normalization method. Valid values: {}".format(self.NORMALIZATION_METHODS.keys()))
         # Numpy array x has format (height, width, channel)
         # but original PIL image has format (width, height, channel)
         the_image_array = np.asarray(self.img, dtype='int16')
 
-        if mean_normalized or normalized:
+        if normalization:
             the_image_array = the_image_array.astype('float16')
 
         if mean_normalized:
@@ -55,8 +68,15 @@ class Images(object):
             the_image_array[:, :, 1] -= mean_normalized[1]
             the_image_array[:, :, 2] -= mean_normalized[2]
 
-        if normalized:
+        if normalization == self.NORMALIZATION_ZERO_ONE:
+            # All values are between 0 and 1
             the_image_array /= 255.
+
+        if normalization == self.NORMALIZATION_MINUS_PLUS_ONE:
+            # All values are between -1 and 1
+            the_image_array /= 255.
+            the_image_array -= 0.5
+            the_image_array *= 2.
 
         return the_image_array
 
