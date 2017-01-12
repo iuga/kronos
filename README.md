@@ -29,7 +29,7 @@ image_data = Images().load(
 ).pad_to_square().resize(
     299, 299
 ).to_array(
-    normalized='zero_one', mean_normalized=([123.68, 116.779, 103.939])
+    normalization='zero_one', mean_normalized=([123.68, 116.779, 103.939])
 )
 ```
 
@@ -91,7 +91,7 @@ def encode_image(X, y):
     # X = image url like "./dog.001.jpg"
     # y = class like "dog" or "1"
     # Return a 224x224 normalized squared image and its class
-    return Images().load(X).resize(224, 224).to_array(normalized='zero_one'), y
+    return Images().load(X).resize(224, 224).to_array(normalization='zero_one'), y
 
 #...
 
